@@ -540,6 +540,7 @@ class BluetoothManager {
     }
 
     final dash = await dashboardController.updateDashboardCommand();
+    debugPrint('updateDashboardCommand called $dash');
     for (var command in dash) {
       await sendCommandToGlasses(command);
     }

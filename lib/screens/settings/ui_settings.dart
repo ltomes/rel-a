@@ -10,6 +10,7 @@ class UiSettingsPage extends StatefulWidget {
 
 class UiSettingsPageState extends State<UiSettingsPage> {
   late bool trainNerdmode;
+  late bool xDripmode;
   late UiPerfs _uiPerfs;
 
   @override
@@ -24,6 +25,9 @@ class UiSettingsPageState extends State<UiSettingsPage> {
 
     setState(() {
       trainNerdmode = _uiPerfs.trainNerdMode;
+    });
+    setState(() {
+      xDripmode = _uiPerfs.xDripMode;
     });
   }
 
@@ -48,8 +52,19 @@ class UiSettingsPageState extends State<UiSettingsPage> {
                 });
               },
             ),
+            SwitchListTile(
+              title: Text('xDrip+ relay Mode'),
+              value: _uiPerfs.xDripMode,
+              onChanged: (bool value) {
+                _uiPerfs.xDripMode = value;
+                setState(() {
+                  xDripmode = value;
+                });
+              },
+            ),
           ],
         ),
+
       ),
     );
   }

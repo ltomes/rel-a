@@ -5,6 +5,7 @@ import 'package:fahrplan/screens/checklist_screen.dart';
 import 'package:fahrplan/screens/fahrplan_daily.dart';
 import 'package:fahrplan/screens/fahrplan_stop.dart';
 import 'package:fahrplan/screens/settings_screen.dart';
+import 'package:fahrplan/screens/xdrip.dart';
 import 'package:fahrplan/utils/ui_perfs.dart';
 import 'package:fahrplan/widgets/current_fahrplan.dart';
 import 'package:fahrplan/widgets/glass_status.dart';
@@ -131,6 +132,27 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => CalendarsPage()),
+              );
+            },
+          ),
+          ListTile(
+            title: Row(
+              children: [
+                _ui.xDripMode
+                    ? Image(
+                  image: AssetImage('assets/icons/xDrip+.png'),
+                  height: 20,
+                )
+                    : Icon(Icons.notifications),
+                SizedBox(width: 10),
+                Text('xDrip+ values'),
+              ],
+            ),
+            trailing: Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => XDripPage()),
               );
             },
           ),

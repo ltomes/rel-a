@@ -16,11 +16,22 @@ class UiPerfs {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     _trainNerdMode = prefs.getBool('trainNerdMode') ?? false;
+    _xDripMode = prefs.getBool('xDripMode') ?? false;
   }
 
   void _setTrainNerdMode(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     _trainNerdMode = value;
     prefs.setBool('trainNerdMode', value);
+  }
+
+  bool _xDripMode = false;
+  bool get xDripMode => _xDripMode;
+  set xDripMode(bool value) => _setxDripMode(value);
+
+  void _setxDripMode(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    _xDripMode = value;
+    prefs.setBool('xDripMode', value);
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:fahrplan/models/android/weather_data.dart';
+import 'package:fahrplan/models/android/xdrip_data.dart';
 import 'package:fahrplan/models/g1/dashboard.dart';
 import 'package:fahrplan/models/g1/time_weather.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,20 +49,36 @@ class DashboardController {
     List<Uint8List> commands = [];
     int temp = 0;
     int weatherIcon = WeatherIcons.NOTHING;
+    int? glucose;
 
     final weather = await WeatherProvider.getWeather();
+    final xDripData = await XDripProvider.getXDrip();
+
     if (weather != null) {
       temp = (weather.currentTemp ?? 0) - 273; // currentTemp is in kelvin
       weatherIcon = WeatherIcons.fromOpenWeatherMapConditionCode(
           weather.currentConditionCode ?? 0);
     }
 
-    commands.add(TimeAndWeather(
-      temperatureUnit: await _getTemperatureUnitFromPreferences(),
-      timeFormat: await _getTimeFormatFromPreferences(),
-      temperatureInCelsius: temp,
-      weatherIcon: weatherIcon,
-    ).buildAddCommand(_seqId++));
+    if (xDripData != null) {
+      glucose = (xDripData.id ?? 0);
+    }
+    if (glucose != null) {
+      commands.add(TimeAndWeather(
+        temperatureUnit: await _getTemperatureUnitFromPreferences(),
+        timeFormat: await _getTimeFormatFromPreferences(),
+        temperatureInCelsius: temp,
+        weatherIcon: weatherIcon,
+        glucose: glucose,
+      ).buildAddCommand(_seqId++));
+    } else {
+      commands.add(TimeAndWeather(
+        temperatureUnit: await _getTemperatureUnitFromPreferences(),
+        timeFormat: await _getTimeFormatFromPreferences(),
+        temperatureInCelsius: temp,
+        weatherIcon: weatherIcon,
+      ).buildAddCommand(_seqId++));
+    }
 
     List<int> dashlayoutCommand =
         DashboardLayout.DASHBOARD_CHANGE_COMMAND.toList();
