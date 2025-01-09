@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fahrplan/services/sgv_service.dart';
-import 'package:fahrplan/models/android/sgv_model.dart';
+import 'package:fahrplan/services/xdrip_sgv_service.dart';
+import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
 
 class XDripPage extends StatefulWidget {
   const XDripPage({Key? key}) : super(key: key);

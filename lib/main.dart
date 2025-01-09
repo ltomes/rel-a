@@ -5,7 +5,7 @@ import 'package:fahrplan/models/fahrplan/checklist.dart';
 import 'package:fahrplan/models/fahrplan/daily.dart';
 import 'package:fahrplan/models/fahrplan/stop.dart';
 import 'package:fahrplan/services/bluetooth_manager.dart';
-import 'package:fahrplan/services/sgv_service.dart';
+import 'package:fahrplan/services/xdrip_sgv_service.dart';
 import 'package:fahrplan/services/stops_manager.dart';
 import 'package:fahrplan/utils/ui_perfs.dart';
 import 'package:flutter/material.dart';

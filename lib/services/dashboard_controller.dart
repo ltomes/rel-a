@@ -4,8 +4,8 @@ import 'package:fahrplan/models/android/weather_data.dart';
 import 'package:fahrplan/models/g1/dashboard.dart';
 import 'package:fahrplan/models/g1/time_weather.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fahrplan/services/sgv_service.dart';
-import 'package:fahrplan/models/android/sgv_model.dart';
+import 'package:fahrplan/services/xdrip_sgv_service.dart';
+import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;

@@ -1,3 +1,8 @@
+// we can potentially use https://github.com/Nb-tst/glucose-to-weather to get glucose data
+// As documented, there is no historical/graph data from this api though.
+// I am unsure how to use that repo directly, I have not found it published to
+// https://gadgetbridge.org like the weather gadget.
+// this is received in Kotlin code and saved into shared preferences
 // this model can be used if a way is found to receive notifications sent
 // by the com.eveningoutpost.dexdrip app
 
