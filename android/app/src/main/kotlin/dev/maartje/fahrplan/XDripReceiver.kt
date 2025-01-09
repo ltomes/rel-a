@@ -12,13 +12,13 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 
 
-class XDripReceiver : BroadcastReceiver() {
+class XDripSGVReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_GENERIC_WEATHER = "nodomain.freeyourgadget.gadgetbridge.ACTION_GENERIC_WEATHER"
-        const val XDRIP_JSON = "XDripJson"
+        const val XDRIP_JSON = "XdripSGVJson"
         const val PREFS_NAME = "FlutterSharedPreferences"
-        const val TAG = "XDripReceiver"
+        const val TAG = "XDripSGVReceiver"
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {

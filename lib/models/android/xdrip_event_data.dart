@@ -1,14 +1,14 @@
-// we use https://gadgetbridge.org/internals/development/weather-support/ to get the weather data
-// suggested app is Breezy Weather
-// this is received in Kotlin code and saved into shared preferences
+// this model can be used if a way is found to receive notifications sent
+// by the com.eveningoutpost.dexdrip app
 
 import 'dart:convert';
 
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class XDripProvider {
-  static const String _sharedPrefsKey = 'XdripJson';
+class XDripEventProvider {
+  // This is not a real thing yet.
+  static const String _sharedPrefsKey = 'XdripEventJson';
 
   static Future<XDripSpec?> getXDrip() async {
     final prefs = await SharedPreferences.getInstance();

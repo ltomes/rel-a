@@ -1,10 +1,47 @@
 import 'dart:typed_data';
 
 import 'package:fahrplan/models/android/weather_data.dart';
-import 'package:fahrplan/models/android/xdrip_data.dart';
 import 'package:fahrplan/models/g1/dashboard.dart';
 import 'package:fahrplan/models/g1/time_weather.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fahrplan/services/sgv_service.dart';
+import 'package:fahrplan/models/android/sgv_model.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class SgvData {
+  final String id;
+  final String device;
+  final DateTime dateString;
+  final int sysTime;
+  final int date;
+  final int sgv;
+  final double delta;
+  final String direction;
+  final int noise;
+  final int filtered;
+  final int unfiltered;
+  final int rssi;
+  final String type;
+  final String unitsHint;
+
+  SgvData.fromJsonMap(Map<String, dynamic> json)
+      : id = json['_id'],
+        device = json['device'],
+        dateString = DateTime.parse(json['dateString']),
+        sysTime = json['sysTime'] as int,
+        date = json['date'],
+        sgv = json['sgv'],
+        delta = json['delta'].toDouble(),
+        direction = json['direction'],
+        noise = json['noise'],
+        filtered = json['filtered'],
+        unfiltered = json['unfiltered'],
+        rssi = json['rssi'],
+        type = json['type'],
+        unitsHint = json['units_hint'];
+}
 
 class DashboardController {
   static final DashboardController _singleton = DashboardController._internal();
@@ -50,18 +87,18 @@ class DashboardController {
     int temp = 0;
     int weatherIcon = WeatherIcons.NOTHING;
     int? glucose;
-
+    late List<SgvResponse> sgvData;
+    final sgvService = SgvService(); // Initialize the service here
     final weather = await WeatherProvider.getWeather();
-    final xDripData = await XDripProvider.getXDrip();
 
     if (weather != null) {
       temp = (weather.currentTemp ?? 0) - 273; // currentTemp is in kelvin
       weatherIcon = WeatherIcons.fromOpenWeatherMapConditionCode(
           weather.currentConditionCode ?? 0);
     }
-
-    if (xDripData != null) {
-      glucose = (xDripData.id ?? 0);
+    sgvData = await sgvService.fetchSgvData();
+    if (sgvData.isNotEmpty) {
+      glucose = (sgvData[sgvData.length].sgv ?? 0);
     }
     if (glucose != null) {
       commands.add(TimeAndWeather(

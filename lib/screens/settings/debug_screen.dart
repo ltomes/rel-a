@@ -1,5 +1,5 @@
 import 'package:fahrplan/models/android/weather_data.dart';
-import 'package:fahrplan/models/android/xdrip_data.dart';
+import 'package:fahrplan/models/android/xdrip_event_data.dart';
 import 'package:fahrplan/models/g1/calendar.dart';
 import 'package:fahrplan/models/g1/dashboard.dart';
 import 'package:fahrplan/models/g1/note.dart';
