@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fahrplan/services/xdrip_sgv_service.dart';
 import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
+import 'package:fahrplan/utils/xdrip.dart';
+import 'package:intl/intl.dart';
 
 class XDripPage extends StatefulWidget {
   const XDripPage({Key? key}) : super(key: key);
@@ -23,6 +25,11 @@ class _XDripPageState extends State<XDripPage> {
     }
   }
   @override
+  void initState () {
+    super.initState();
+    fetchSgvData();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('xDrip Page')),
@@ -33,11 +40,11 @@ class _XDripPageState extends State<XDripPage> {
             child: const Text('Fetch SGV Data'),
           ),
           Expanded(
-            child: sgvData != null
+            child: sgvData.isNotEmpty
                 ? ListView.builder(
               itemCount: sgvData.length,
               itemBuilder: (BuildContext context, int index) {
-                return ListTile(title: Text('${sgvData[index].sgv} : ${sgvData[index].dateString}'));
+                return ListTile(title: Text('${XDripUtils.getFormattedSGVValue(sgvData[index], sgvData.first.unitsHint)} : Time: ${DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(sgvData[index].date, isUtc: false))}'));
               },
             )
                 : const CircularProgressIndicator(),
