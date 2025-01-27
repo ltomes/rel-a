@@ -1,9 +1,18 @@
+import 'dart:math';
+
 import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
+
+extension TruncateDoubles on double {
+  double truncateToDecimalPlaces(int fractionalDigits) => (this * pow(10,
+      fractionalDigits)).truncate() / pow(10, fractionalDigits);
+}
 
 class XDripUtils {
 
-  static String getFormattedSGVValue(SgvResponse sgvResponse, [unitHint]) {
-    print('getFormattedSGVValue called with sgvResponse: $sgvResponse, unitHint: $unitHint');
+  static String  getFormattedSGVValue(SgvResponse sgvResponse, [unitHint]) {
+    if (unitHint==null && sgvResponse.unitsHint==null) {
+      throw Exception('Units not provided by xDrip via hints.');
+    }
     final String slopeDoubleDown = "DoubleDown";
     final String slopeSingleDown = "SingleDown";
     final String slopeFortyfiveDown = "FortyFiveDown";
@@ -39,7 +48,10 @@ class XDripUtils {
     List<String> unitNames = ['mgdl', 'mmol'];
     List<String> unitValues = ['mg/dl', 'mmol/L'];
     num mgdlValue = sgvResponse.sgv.toInt();
-    num mmolValue = mgdlValue / 18;
+    // Based on this page (https://www.disabled-world.com/calculators-charts/bgl.php)
+    // I decided to implement mmol rendering as 3 decimal places without rounding.
+    // A user of mmol values should let me know if this matches what they expect.
+    double mmolValue = ((mgdlValue / 18.0).toDouble()).truncateToDecimalPlaces(3);
     List<num> unitValue = [mgdlValue, mmolValue];
     String hint = unitHint ?? sgvResponse.unitsHint;
     String currentGlucose = '';
