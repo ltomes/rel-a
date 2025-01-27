@@ -4,16 +4,17 @@ import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
 import 'package:fahrplan/utils/xdrip.dart';
 import 'package:intl/intl.dart';
 
+import 'package:chart_sparkline/chart_sparkline.dart';
+import 'package:screenshot/screenshot.dart';
 class XDripPage extends StatefulWidget {
   const XDripPage({Key? key}) : super(key: key);
-
   @override
   _XDripPageState createState() => _XDripPageState();
 }
 
 class _XDripPageState extends State<XDripPage> {
   late List<SgvResponse> sgvData = []; // Initialize it as an empty list
-
+  ScreenshotController screenshotController = ScreenshotController();
   Future<void> fetchSgvData() async {
     final sgvService = SgvService(); // Initialize the service here
 
@@ -23,6 +24,21 @@ class _XDripPageState extends State<XDripPage> {
     } catch (e) {
       print('Error making request: $e');
     }
+    screenshotController
+        .captureFromWidget(SizedBox(
+        width: 640,
+        height: 200,
+        child: Sparkline(
+          data: XDripUtils.generateChartData(sgvData),
+          gridLinesEnable: true,
+          pointsMode: PointsMode.last,
+          pointSize: 4.0,
+          pointColor: Colors.blue,
+        )
+    ))
+        .then((capturedImage) {
+      // Handle captured image
+    });
   }
   @override
   void initState () {
@@ -49,7 +65,16 @@ class _XDripPageState extends State<XDripPage> {
             )
                 : const CircularProgressIndicator(),
           ),
-        ],
+          SizedBox(
+            child: Sparkline(
+              data: XDripUtils.generateChartData(sgvData),
+              gridLinesEnable: true,
+              pointsMode: PointsMode.last,
+              pointSize: 4.0,
+              pointColor: Colors.blue,
+            )
+          ),
+      ],
       ),
     );
   }

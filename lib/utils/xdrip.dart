@@ -9,7 +9,7 @@ extension TruncateDoubles on double {
 
 class XDripUtils {
 
-  static String  getFormattedSGVValue(SgvResponse sgvResponse, [unitHint]) {
+  static String getFormattedSGVValue(SgvResponse sgvResponse, [unitHint]) {
     if (unitHint==null && sgvResponse.unitsHint==null) {
       throw Exception('Units not provided by xDrip via hints.');
     }
@@ -68,5 +68,12 @@ class XDripUtils {
     String currentNotification = '$currentSlope $currentGlucose $unitOfMeasure';
     print('currentNotification $currentNotification');
     return currentNotification;
+  }
+  static List<double> generateChartData(List<SgvResponse> sgvResponses, [unitHint]){
+    List<double> sgvList = [];
+    for (int i = 0; i < sgvResponses.length; i++) {
+      sgvList.insert(0, (sgvResponses[i].sgv).toDouble());
+    }
+    return sgvList;
   }
 }
