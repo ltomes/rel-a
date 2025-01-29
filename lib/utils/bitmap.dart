@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
 
 Future<Uint8List> generateBadAppleBMP(int i) async {
   // fetch the JPG image from assets and render it to a canvas
@@ -62,6 +63,43 @@ Future<Uint8List> generateBadAppleBMP(int i) async {
   _saveBitmapToDisk(bmpBytes, 'demo.bmp');
 
   return bmpBytes;
+}
+
+Future<Uint8List> removeWhiteBackground(Uint8List bytes) async {
+  img.Image image = img.decodeImage(bytes)!;
+  var pixels = image.getBytes();
+  int height = image.height;
+  int width = image.width;
+  if (image.width > image.height) {
+    return pixels;
+  }
+  if (pixels[3] == 0) {
+    return pixels;
+  }
+  int red = pixels[0], green = pixels[1], blue = pixels[2];
+  if (red != 255 && green != 255 && blue != 255) {
+    return pixels;
+  }
+  for (int i = 0, len = pixels.length; i < len; i += 4) {
+    if (pixels[i] == red && pixels[i + 1] == green && pixels[i + 2] == blue) {
+      pixels[i + 3] = 0;
+    }
+  }
+  return pixels;
+}
+
+Future<Uint8List> generateBMPForDisplay(Uint8List rgbData, int canvasWidth, int canvasHeight) async {
+  // Convert to an image
+  // Convert RGBA to 1-bit monochrome (0=black, 1=white)
+  var rgbaData = await removeWhiteBackground(rgbData);
+  await _saveBitmapToDisk(rgbaData, 'rgbaimage.bmp');
+  final bmpData = _convertRgbaTo1Bit(rgbaData, canvasWidth, canvasHeight);
+
+  // Build the BMP headers and combine
+  // final bmpBytes = _build1BitBmp(canvasWidth, canvasHeight, bmpData);
+  await _saveBitmapToDisk(bmpData, '1bitimage.bmp');
+
+  return bmpData;
 }
 
 Future<Uint8List> generateDemoBMP() async {

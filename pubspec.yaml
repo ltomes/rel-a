@@ -57,6 +57,7 @@ dependencies:
   dart_openai: ^5.1.0
   chart_sparkline: ^1.1.1
   screenshot: ^3.0.0
+  flutter_image_converter: ^0.4.1
 
 dev_dependencies:
   flutter_test:

@@ -355,6 +355,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.34.5"
+  flutter_image_converter:
+    dependency: "direct main"
+    description:
+      name: flutter_image_converter
+      sha256: d175554baeec90bc34a68ea3665a197fef509e9f921ae7679ac99be754d3ee70
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.1"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
