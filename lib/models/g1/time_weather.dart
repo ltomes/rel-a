@@ -178,11 +178,12 @@ class TimeAndWeather {
       temperatureInCelsius,
       convertToFahrenheit, // 0x00 or 0x01
       is12hFormat, // 0x00 or 0x01
+      glucose ?? 0,
     ]);
-    if (glucose != null) {
-      int glucoseInt = glucose ?? 0; // If glucose is null, set glucoseInt to 0 instead
-      list.add(glucoseInt); // Add the glucose value only if it's available)
-    }
+    // if (glucose != null) {
+    //   int glucoseInt = glucose ?? 0; // If glucose is null, set glucoseInt to 0 instead
+    //   list.add(glucoseInt); // Add the glucose value only if it's available)
+    // }
     debugPrint(
         'TimeAndWeather.buildAddCommand: ${list.map((b) => b.toRadixString(16).padLeft(2, '0')).join(' ')}');
 

@@ -98,7 +98,7 @@ class DashboardController {
     }
     sgvData = await sgvService.fetchSgvData();
     if (sgvData.isNotEmpty) {
-      glucose = (sgvData[sgvData.length].sgv ?? 0);
+      glucose = (sgvData[sgvData.length-1].sgv ?? 0);
     }
     if (glucose != null) {
       commands.add(TimeAndWeather(
