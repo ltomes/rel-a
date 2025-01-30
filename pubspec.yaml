@@ -58,6 +58,8 @@ dependencies:
   chart_sparkline: ^1.1.1
   screenshot: ^3.0.0
   flutter_image_converter: ^0.4.1
+  image: ^4.5.2
+  share_plus: ^10.1.4
 
 dev_dependencies:
   flutter_test:

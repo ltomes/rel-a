@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
+import 'package:intl/intl.dart';
 
 extension TruncateDoubles on double {
   double truncateToDecimalPlaces(int fractionalDigits) => (this * pow(10,
@@ -75,5 +76,14 @@ class XDripUtils {
       sgvList.insert(0, (sgvResponses[i].sgv).toDouble());
     }
     return sgvList;
+  }
+
+  static String getWidgetTitle(SgvResponse sgvResponse, {String fallback='An error occurred generating title', String? unitsHint}) {
+    try {
+      return '${XDripUtils.getFormattedSGVValue(sgvResponse, unitsHint)}: ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(sgvResponse.date, isUtc: false))}';
+    } catch (e) {
+      // debugPrint('Error while generating widget title: $e');
+      return fallback;
+    }
   }
 }

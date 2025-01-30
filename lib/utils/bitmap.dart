@@ -88,20 +88,6 @@ Future<Uint8List> removeWhiteBackground(Uint8List bytes) async {
   return pixels;
 }
 
-Future<Uint8List> generateBMPForDisplay(Uint8List rgbData, int canvasWidth, int canvasHeight) async {
-  // Convert to an image
-  // Convert RGBA to 1-bit monochrome (0=black, 1=white)
-  var rgbaData = await removeWhiteBackground(rgbData);
-  await _saveBitmapToDisk(rgbaData, 'rgbaimage.bmp');
-  final bmpData = _convertRgbaTo1Bit(rgbaData, canvasWidth, canvasHeight);
-
-  // Build the BMP headers and combine
-  // final bmpBytes = _build1BitBmp(canvasWidth, canvasHeight, bmpData);
-  await _saveBitmapToDisk(bmpData, '1bitimage.bmp');
-
-  return bmpData;
-}
-
 Future<Uint8List> generateDemoBMP() async {
   const canvasWidth = 576;
   const canvasHeight = 136;
@@ -237,12 +223,19 @@ Future<void> _saveBitmapToDisk(Uint8List bmpData, String fileName) async {
   }
 }
 
-/// Convert RGBA to 1-bit (threshold at ~50% brightness)
+Future<Uint8List> generateBMPForDisplay(Uint8List bmpData, int canvasWidth, int canvasHeight) async {
+  // var rgbaData = await removeWhiteBackground(bmpData);
+  final bmp1BitData = _convertRgbaTo1Bit(bmpData, canvasWidth, canvasHeight);
+  final bmpBytes = _build1BitBmp(canvasWidth, canvasHeight, bmp1BitData);
+  return bmpBytes;
+}
+
+/// Convert RGBA to 1-bit (threshold at ~25% brightness)
 Uint8List _convertRgbaTo1Bit(Uint8List rgba, int width, int height) {
   final bytesPerRow = width ~/ 8;
   final output = Uint8List(bytesPerRow * height);
 
-  for (int y = 0; y < height; y++) {
+  for (int y = height - 1; y >= 0; y--) {
     for (int x = 0; x < width; x++) {
       final index = (y * width + x) * 4;
       final r = rgba[index];
@@ -251,9 +244,10 @@ Uint8List _convertRgbaTo1Bit(Uint8List rgba, int width, int height) {
 
       final brightness = (r + g + b) / 3;
       final bit = brightness > 128 ? 1 : 0;
+      // final bit = brightness > (128/2) ? 1 : 0;
 
-      final invertedY = (height - 1 - y);
-      final outRowStart = invertedY * bytesPerRow;
+      // final invertedY = (height - 1 - y);
+      final outRowStart = y * bytesPerRow;
       final byteIndex = outRowStart + (x ~/ 8);
       final bitOffset = 7 - (x % 8);
       output[byteIndex] |= (bit << bitOffset);
@@ -261,6 +255,7 @@ Uint8List _convertRgbaTo1Bit(Uint8List rgba, int width, int height) {
   }
   return output;
 }
+
 
 /// Build a 1-bit BMP file with a monochrome palette
 Uint8List _build1BitBmp(int width, int height, Uint8List bmpData) {
@@ -281,17 +276,17 @@ Uint8List _build1BitBmp(int width, int height, Uint8List bmpData) {
   file.add(_int32le(40)); // biSize
   file.add(_int32le(width));
   file.add(_int32le(height));
-  file.add(_int16le(1));
-  file.add(_int16le(1));
-  file.add(_int32le(0));
-  file.add(_int32le(imageSize));
-  file.add(_int32le(0));
-  file.add(_int32le(0));
-  file.add(_int32le(2));
-  file.add(_int32le(2));
+  file.add(_int16le(1)); //bits per pixel
+  file.add(_int16le(1)); // biPlanes
+  file.add(_int32le(0)); // biCompression
+  file.add(_int32le(imageSize)); //image size
+  file.add(_int32le(0)); //x pixels per meter
+  file.add(_int32le(0)); //y pixels per meter
+  file.add(_int32le(2)); //colors used
+  file.add(_int32le(2)); //important colors
 
-  file.add([0x00, 0x00, 0x00, 0x00]);
-  file.add([0xFF, 0xFF, 0xFF, 0x00]);
+  file.add([0x00, 0x00, 0x00, 0x00]); // Black palette entry
+  file.add([0xFF, 0xFF, 0xFF, 0x00]); // White palette entry
 
   file.add(bmpData);
 
