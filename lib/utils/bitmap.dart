@@ -230,7 +230,7 @@ Future<Uint8List> generateBMPForDisplay(Uint8List bmpData, int canvasWidth, int 
   return bmpBytes;
 }
 
-/// Convert RGBA to 1-bit (threshold at ~25% brightness)
+/// Convert RGBA to 1-bit (threshold at ~50% brightness)
 Uint8List _convertRgbaTo1Bit(Uint8List rgba, int width, int height) {
   final bytesPerRow = width ~/ 8;
   final output = Uint8List(bytesPerRow * height);
