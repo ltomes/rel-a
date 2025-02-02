@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fahrplan/models/g1/time_weather.dart';
+import 'package:relaa/models/g1/time_weather.dart';
 import 'dart:typed_data';
 
 void main() {

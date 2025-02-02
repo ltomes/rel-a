@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:fahrplan/models/fahrplan/stop.dart';
-import 'package:fahrplan/services/bluetooth_manager.dart';
+import 'package:relaa/models/fahrplan/stop.dart';
+import 'package:relaa/services/bluetooth_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 

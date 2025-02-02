@@ -1,4 +1,4 @@
-import 'package:fahrplan/models/fahrplan/widgets/traewelling.dart';
+import 'package:relaa/models/fahrplan/widgets/traewelling.dart';
 import 'package:flutter/material.dart';
 
 class TraewellingSettingsPage extends StatefulWidget {

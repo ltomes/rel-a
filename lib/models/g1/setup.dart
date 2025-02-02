@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:fahrplan/models/g1/commands.dart';
+import 'package:relaa/models/g1/commands.dart';
 
 class G1Setup {
   bool calendarEnable;

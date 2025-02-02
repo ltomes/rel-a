@@ -16,7 +16,7 @@ class UiPerfs {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     _trainNerdMode = prefs.getBool('trainNerdMode') ?? false;
-    _xDripMode = prefs.getBool('xDripMode') ?? false;
+    _xDripImageMode = prefs.getBool('xDripImageMode') ?? false;
   }
 
   void _setTrainNerdMode(bool value) async {
@@ -25,13 +25,13 @@ class UiPerfs {
     prefs.setBool('trainNerdMode', value);
   }
 
-  bool _xDripMode = false;
-  bool get xDripMode => _xDripMode;
-  set xDripMode(bool value) => _setxDripMode(value);
+  bool _xDripImageMode = false;
+  bool get xDripImageMode => _xDripImageMode;
+  set xDripImageMode(bool value) => _setxDripImageMode(value);
 
-  void _setxDripMode(bool value) async {
+  void _setxDripImageMode(bool value) async {
     final prefs = await SharedPreferences.getInstance();
-    _xDripMode = value;
-    prefs.setBool('xDripMode', value);
+    _xDripImageMode = value;
+    prefs.setBool('xDripImageMode', value);
   }
 }

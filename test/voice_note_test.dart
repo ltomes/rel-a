@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fahrplan/models/g1/voice_note.dart';
-import 'package:fahrplan/models/g1/commands.dart';
+import 'package:relaa/models/g1/voice_note.dart';
+import 'package:relaa/models/g1/commands.dart';
 
 void main() {
   group('VoiceNote', () {

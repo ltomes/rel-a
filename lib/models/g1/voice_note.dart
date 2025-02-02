@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:fahrplan/models/g1/commands.dart';
+import 'package:relaa/models/g1/commands.dart';
 import 'package:flutter/foundation.dart';
 
 class NoteSubCommands {

@@ -6,70 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as img;
 
-Future<Uint8List> generateBadAppleBMP(int i) async {
-  // fetch the JPG image from assets and render it to a canvas
-
-  const canvasWidth = 576;
-  const canvasHeight = 136;
-
-  final recorder = ui.PictureRecorder();
-  final canvas = ui.Canvas(recorder);
-
-  // Draw background (black)
-  final backgroundPaint = ui.Paint()
-    ..color = const ui.Color.fromARGB(255, 255, 255, 255);
-  canvas.drawRect(
-      ui.Rect.fromLTWH(0, 0, canvasWidth.toDouble(), canvasHeight.toDouble()),
-      backgroundPaint);
-
-  // open the asset file
-  // convert i to a string from 001 to 6500
-  final iStr = i.toString().padLeft(3, '0');
-
-  final ByteData data = await rootBundle.load('assets/badapple/$iStr.jpg');
-  final Uint8List bytes = data.buffer.asUint8List();
-
-  // draw the image to the canvas at the center and scale it to fit the height
-  final codec = await ui.instantiateImageCodec(bytes);
-  final frame = await codec.getNextFrame();
-  final image = frame.image;
-  final scale = canvasHeight / image.height;
-  final dstRect = ui.Rect.fromLTWH(
-    (canvasWidth - image.width * scale) / 2,
-    0,
-    image.width * scale,
-    canvasHeight.toDouble(),
-  );
-  canvas.drawImageRect(
-    image,
-    ui.Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
-    dstRect,
-    ui.Paint(),
-  );
-
-  // Convert to an image
-  final picture = recorder.endRecording();
-  final byteData = await (await picture.toImage(canvasWidth, canvasHeight))
-      .toByteData(format: ui.ImageByteFormat.rawRgba);
-  final rgbaData = byteData!.buffer.asUint8List();
-
-  // Convert RGBA to 1-bit monochrome (0=black, 1=white)
-  final bmpData = _convertRgbaTo1Bit(rgbaData, canvasWidth, canvasHeight);
-
-  // Build the BMP headers and combine
-  final bmpBytes = _build1BitBmp(canvasWidth, canvasHeight, bmpData);
-
-  // Save BMP temporarily to disk for debugging
-  _saveBitmapToDisk(bmpBytes, 'demo.bmp');
-
-  return bmpBytes;
-}
 
 Future<Uint8List> removeWhiteBackground(Uint8List bytes) async {
   img.Image image = img.decodeImage(bytes)!;
   var pixels = image.getBytes();
-  int height = image.height;
-  int width = image.width;
   if (image.width > image.height) {
     return pixels;
   }
@@ -223,7 +163,7 @@ Future<void> _saveBitmapToDisk(Uint8List bmpData, String fileName) async {
   }
 }
 
-Future<Uint8List> generateBMPForDisplay(Uint8List bmpData, int canvasWidth, int canvasHeight) async {
+Uint8List generateBMPForDisplay(Uint8List bmpData, int canvasWidth, int canvasHeight) {
   // var rgbaData = await removeWhiteBackground(bmpData);
   final bmp1BitData = _convertRgbaTo1Bit(bmpData, canvasWidth, canvasHeight);
   final bmpBytes = _build1BitBmp(canvasWidth, canvasHeight, bmp1BitData);
@@ -231,7 +171,9 @@ Future<Uint8List> generateBMPForDisplay(Uint8List bmpData, int canvasWidth, int 
 }
 
 /// Convert RGBA to 1-bit (threshold at ~50% brightness)
-Uint8List _convertRgbaTo1Bit(Uint8List rgba, int width, int height) {
+Uint8List _convertRgbaTo1Bit(Uint8List bmpData, int width, int height) {
+  // Remove the first 40 bytes (BMP header) from bmpData and save it as rgba
+  Uint8List rgba = bmpData.sublist(128); // Was 139, 11 or 12 pixels get trimmed from the top rows with this value...
   final bytesPerRow = width ~/ 8;
   final output = Uint8List(bytesPerRow * height);
 
@@ -265,21 +207,24 @@ Uint8List _build1BitBmp(int width, int height, Uint8List bmpData) {
   final fileSize = headerSize + imageSize;
 
   final file = BytesBuilder();
+  /* See https://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm
+  For format specification */
 
   file.addByte(0x42); // 'B'
   file.addByte(0x4D); // 'M'
-  file.add(_int32le(fileSize));
+  file.add(_int32le(fileSize)); // FileSize
   file.add(_int16le(0)); // reserved
   file.add(_int16le(0)); // reserved
   file.add(_int32le(headerSize)); // offset to pixels
 
   file.add(_int32le(40)); // biSize
-  file.add(_int32le(width));
-  file.add(_int32le(height));
-  file.add(_int16le(1)); //bits per pixel
+  file.add(_int32le(width)); // biWidth
+  file.add(_int32le(height)); // biHeight
   file.add(_int16le(1)); // biPlanes
+  file.add(_int16le(1)); // biBitCount Bits Per Pixel
   file.add(_int32le(0)); // biCompression
-  file.add(_int32le(imageSize)); //image size
+  file.add(_int32le(0)); // biSizeImage ImageSize It is valid to set this =0 if Compression = 0
+  // file.add(_int32le(imageSize)); // biSizeImage ImageSize
   file.add(_int32le(0)); //x pixels per meter
   file.add(_int32le(0)); //y pixels per meter
   file.add(_int32le(2)); //colors used

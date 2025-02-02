@@ -1,7 +1,7 @@
 import 'package:duration_picker/duration_picker.dart';
-import 'package:fahrplan/models/fahrplan/checklist.dart';
-import 'package:fahrplan/screens/checklists/list_screen.dart';
-import 'package:fahrplan/services/bluetooth_manager.dart';
+import 'package:relaa/models/fahrplan/checklist.dart';
+import 'package:relaa/screens/checklists/list_screen.dart';
+import 'package:relaa/services/bluetooth_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

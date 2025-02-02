@@ -1,5 +1,5 @@
-import 'package:fahrplan/models/fahrplan/widgets/fahrplan_widget.dart';
-import 'package:fahrplan/models/g1/note.dart';
+import 'package:relaa/models/fahrplan/widgets/fahrplan_widget.dart';
+import 'package:relaa/models/g1/note.dart';
 import 'package:flutter/material.dart';
 import 'package:fuzzywuzzy/fuzzywuzzy.dart';
 import 'package:hive/hive.dart';

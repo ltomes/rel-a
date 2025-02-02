@@ -1,4 +1,4 @@
-import 'package:fahrplan/models/fahrplan/whispermodel.dart';
+import 'package:relaa/models/fahrplan/whispermodel.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whisper_flutter_new/whisper_flutter_new.dart';

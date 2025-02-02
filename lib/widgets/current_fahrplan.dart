@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:fahrplan/models/fahrplan/fahrplan_dashboard.dart';
-import 'package:fahrplan/models/g1/note.dart';
+import 'package:relaa/models/fahrplan/fahrplan_dashboard.dart';
+import 'package:relaa/models/g1/note.dart';
 import 'package:flutter/material.dart';
 
 class CurrentFahrplan extends StatefulWidget {

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "dev.maartje.fahrplan"
+    namespace = "dev.ltomes.relaa"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.11902837"
 
@@ -31,7 +31,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "dev.maartje.fahrplan"
+        applicationId = "dev.ltomes.relaa"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24 // needed for ffmpeg

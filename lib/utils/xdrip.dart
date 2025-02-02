@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
+import 'package:relaa/models/android/xdrip_sgv_model.dart';
 import 'package:intl/intl.dart';
 
 extension TruncateDoubles on double {

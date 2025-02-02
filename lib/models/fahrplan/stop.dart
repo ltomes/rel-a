@@ -1,4 +1,4 @@
-import 'package:fahrplan/models/fahrplan/fahrplan_dashboard.dart';
+import 'package:relaa/models/fahrplan/fahrplan_dashboard.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 

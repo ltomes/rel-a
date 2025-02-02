@@ -1,14 +1,11 @@
 import 'dart:typed_data';
 
-import 'package:fahrplan/models/android/weather_data.dart';
-import 'package:fahrplan/models/g1/dashboard.dart';
-import 'package:fahrplan/models/g1/time_weather.dart';
+import 'package:relaa/models/android/weather_data.dart';
+import 'package:relaa/models/g1/dashboard.dart';
+import 'package:relaa/models/g1/time_weather.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fahrplan/services/xdrip_sgv_service.dart';
-import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
-
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:relaa/services/xdrip_sgv_service.dart';
+import 'package:relaa/models/android/xdrip_sgv_model.dart';
 
 class SgvData {
   final String id;
@@ -96,6 +93,7 @@ class DashboardController {
       weatherIcon = WeatherIcons.fromOpenWeatherMapConditionCode(
           weather.currentConditionCode ?? 0);
     }
+    print("Dashboard is calling sgvService.fetchSgvData();");
     sgvData = await sgvService.fetchSgvData();
     if (sgvData.isNotEmpty) {
       glucose = (sgvData[sgvData.length-1].sgv ?? 0);

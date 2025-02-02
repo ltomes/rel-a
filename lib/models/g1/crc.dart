@@ -1,4 +1,4 @@
-import 'package:fahrplan/models/g1/commands.dart';
+import 'package:relaa/models/g1/commands.dart';
 
 class CrcPacket {
   final int command = Commands.CRC;

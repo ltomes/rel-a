@@ -1,10 +1,6 @@
 import 'dart:convert';
-import 'package:fahrplan/models/fahrplan/widgets/fahrplan_widget.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:fahrplan/models/g1/note.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeAssistantWidget {

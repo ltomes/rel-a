@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:fahrplan/models/g1/commands.dart';
-import 'package:fahrplan/models/g1/even_ai.dart';
+import 'package:relaa/models/g1/commands.dart';
+import 'package:relaa/models/g1/even_ai.dart';
 import 'package:flutter/foundation.dart';
 
 // Define AIStatus and ScreenAction constants

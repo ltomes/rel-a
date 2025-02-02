@@ -1,5 +1,5 @@
 flutter_native_splash:
-  color: "#f6f6f6"
-  branding: assets/icons/fahrplan-nobg.png
+  color: "#dbd9d9"
+  branding: assets/icons/relaa-nobg.png
   branding_mode: bottom
   android: true

@@ -1,12 +1,11 @@
-import 'package:fahrplan/models/android/weather_data.dart';
-import 'package:fahrplan/models/android/xdrip_event_data.dart';
-import 'package:fahrplan/models/g1/calendar.dart';
-import 'package:fahrplan/models/g1/dashboard.dart';
-import 'package:fahrplan/models/g1/note.dart';
-import 'package:fahrplan/models/g1/notification.dart';
-import 'package:fahrplan/models/g1/time_weather.dart';
-import 'package:fahrplan/services/bluetooth_manager.dart';
-import 'package:fahrplan/utils/bitmap.dart';
+import 'package:relaa/models/android/weather_data.dart';
+import 'package:relaa/models/g1/calendar.dart';
+import 'package:relaa/models/g1/dashboard.dart';
+import 'package:relaa/models/g1/note.dart';
+import 'package:relaa/models/g1/notification.dart';
+import 'package:relaa/models/g1/time_weather.dart';
+import 'package:relaa/services/bluetooth_manager.dart';
+import 'package:relaa/utils/bitmap.dart';
 import 'package:flutter/material.dart';
 
 class DebugPage extends StatefulWidget {
@@ -93,29 +92,11 @@ class _DebugPageSate extends State<DebugPage> {
     }
   }
 
-  void _sendBadApple() async {
-    if (bluetoothManager.isConnected) {
-      for (var i = 1; i < 6500; i += 60) {
-        // we have 0.5 fps so skipping some frames
-        try {
-          await bluetoothManager.sendBitmap(await generateBadAppleBMP(i));
-        } catch (e) {
-          debugPrint('Error sending frame: $e');
-        }
-        await Future.delayed(const Duration(milliseconds: 1000));
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Glasses are not connected')),
-      );
-    }
-  }
-
   void _sendNoteDemo() async {
     if (bluetoothManager.isConnected) {
       var note1 = Note(
         noteNumber: 1,
-        name: 'Fahrplan',
+        name: 'Reläa',
         text:
             '☐ 09:00 Take medication\n☐ 09:18 Take bus 85\n☐ 09:58 take train to FN',
       );
@@ -206,11 +187,6 @@ class _DebugPageSate extends State<DebugPage> {
           ElevatedButton(
             onPressed: _sendNoteDemo,
             child: const Text("Send Note Demo"),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _sendBadApple,
-            child: const Text("Send Bad Apple"),
           ),
           const SizedBox(height: 20),
           ElevatedButton(

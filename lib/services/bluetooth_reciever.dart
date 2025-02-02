@@ -1,12 +1,12 @@
-import 'package:fahrplan/models/fahrplan/checklist.dart';
-import 'package:fahrplan/models/fahrplan/widgets/homassistant.dart';
-import 'package:fahrplan/models/g1/glass.dart';
-import 'package:fahrplan/models/g1/commands.dart';
-import 'package:fahrplan/models/g1/voice_note.dart';
-import 'package:fahrplan/models/voice/voice_commands.dart';
-import 'package:fahrplan/services/bluetooth_manager.dart';
-import 'package:fahrplan/services/whisper.dart';
-import 'package:fahrplan/utils/lc3.dart';
+import 'package:relaa/models/fahrplan/checklist.dart';
+import 'package:relaa/models/fahrplan/widgets/homassistant.dart';
+import 'package:relaa/models/g1/glass.dart';
+import 'package:relaa/models/g1/commands.dart';
+import 'package:relaa/models/g1/voice_note.dart';
+import 'package:relaa/models/voice/voice_commands.dart';
+import 'package:relaa/services/bluetooth_manager.dart';
+import 'package:relaa/services/whisper.dart';
+import 'package:relaa/utils/lc3.dart';
 import 'package:flutter/foundation.dart';
 
 // Command response status codes

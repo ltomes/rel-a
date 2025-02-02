@@ -1,5 +1,5 @@
-import 'package:fahrplan/models/fahrplan/stop.dart';
-import 'package:fahrplan/services/stops_manager.dart';
+import 'package:relaa/models/fahrplan/stop.dart';
+import 'package:relaa/services/stops_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';

@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.maartje.fahrplan">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.ltomes.relaa">
 <!-- Permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -27,7 +27,7 @@
     <uses-feature android:name="android.hardware.location" android:required="true" />
 
     <application
-        android:label="Fahrplan"
+        android:label="Reläa"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

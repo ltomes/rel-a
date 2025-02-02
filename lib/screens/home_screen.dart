@@ -1,16 +1,16 @@
-import 'dart:async';
-
-import 'package:fahrplan/screens/calendars_screen.dart';
-import 'package:fahrplan/screens/checklist_screen.dart';
-import 'package:fahrplan/screens/fahrplan_daily.dart';
-import 'package:fahrplan/screens/fahrplan_stop.dart';
-import 'package:fahrplan/screens/settings_screen.dart';
-import 'package:fahrplan/screens/xdrip.dart';
-import 'package:fahrplan/utils/ui_perfs.dart';
-import 'package:fahrplan/widgets/current_fahrplan.dart';
-import 'package:fahrplan/widgets/glass_status.dart';
+import 'package:relaa/screens/calendars_screen.dart';
+import 'package:relaa/screens/settings_screen.dart';
+import 'package:relaa/screens/xdrip.dart';
+import 'package:relaa/utils/ui_perfs.dart';
+import 'package:relaa/widgets/glass_status.dart';
 import 'package:flutter/material.dart';
-import '../services/bluetooth_manager.dart';
+
+import 'package:chart_sparkline/chart_sparkline.dart';
+
+import 'package:relaa/services/xdrip_sgv_service.dart';
+import 'package:relaa/models/android/xdrip_sgv_model.dart';
+import 'package:relaa/utils/xdrip.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,19 +20,42 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final BluetoothManager bluetoothManager = BluetoothManager();
   final UiPerfs _ui = UiPerfs.singleton;
+  late List<SgvResponse> sgvData = []; // Initialize it as an empty list
+  late String widgetTitle = 'Loading xDrip+ data...';
+  Future<void> fetchSgvData() async {
+    final sgvService = SgvService(); // Initialize the service here
+    try {
+      sgvData = await sgvService.fetchSgvData();
+      if (sgvData.isNotEmpty) {
+        widgetTitle = XDripUtils.getWidgetTitle(sgvData.first, fallback: widgetTitle, unitsHint: sgvData.first.unitsHint);
+        setState(() {
+          this.widgetTitle = widgetTitle;
+          this.sgvData = sgvData;
+        });
+      } else {
+        setState(() {
+          this.sgvData = sgvData;
+        });
+      }
+
+
+    } catch (e) {
+      print('Error making request: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    fetchSgvData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fahrplan'),
+        title: const Text('Reläa'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -49,68 +72,61 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(16.0),
         children: [
           GlassStatus(),
-          CurrentFahrplan(),
-          ListTile(
-            title: Row(
-              children: [
-                _ui.trainNerdMode
-                    ? Image(
-                        image: AssetImage('assets/icons/reference.png'),
-                        height: 20,
-                      )
-                    : Icon(Icons.sunny),
-                SizedBox(width: 10),
-                Text('Daily Items'),
-              ],
+          ElevatedButton(
+            onPressed: fetchSgvData,
+            child: const Text('Force Fetch SGV Data'),
+          ),
+          // Expanded(
+          //   child: sgvData.isNotEmpty
+          //       ? ListView.builder(
+          //     itemCount: sgvData.length,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       return ListTile(title: Text(XDripUtils.getWidgetTitle(sgvData[index], fallback: widgetTitle, unitsHint: sgvData.first.unitsHint)));
+          //     },
+          //   )
+          //       : SizedBox(
+          //     height: 40,
+          //     width: 40,
+          //     child: CircularProgressIndicator(),
+          //   )
+          // ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+                children: [
+                  ListTile(title: Text(sgvData.isNotEmpty ? widgetTitle : 'Loading xDrip+ data...')),
+                  Container(
+                    height: 70,
+                    color: Colors.white,
+                    child: sgvData.isNotEmpty ? Sparkline(
+                      data: XDripUtils.generateChartData(sgvData),
+                      gridLinesEnable: true,
+                      pointsMode: PointsMode.last,
+                      pointSize: 4.0,
+                      pointColor: Colors.blue,
+                    ) : Text('...'),
+                  )
+                ]
             ),
-            trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FahrplanDailyPage()),
-              );
-            },
           ),
           ListTile(
             title: Row(
               children: [
-                _ui.trainNerdMode
+                _ui.xDripImageMode
                     ? Image(
-                        image: AssetImage('assets/icons/stop.png'),
-                        height: 20,
-                      )
+                  image: AssetImage('assets/icons/xDrip+.png'),
+                  height: 20,
+                )
                     : Icon(Icons.notifications),
                 SizedBox(width: 10),
-                Text('Stop Items'),
+                Text('xDrip+ values'),
               ],
             ),
             trailing: Icon(Icons.chevron_right),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => FahrplanStopPage()),
-              );
-            },
-          ),
-          ListTile(
-            title: Row(
-              children: [
-                _ui.trainNerdMode
-                    ? Image(
-                        image: AssetImage('assets/icons/oorsprong.png'),
-                        height: 20,
-                      )
-                    : Icon(Icons.checklist),
-                SizedBox(width: 10),
-                Text('Checklists'),
-              ],
-            ),
-            trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FahrplanChecklistPage()),
+                MaterialPageRoute(builder: (context) => XDripPage()),
               );
             },
           ),
@@ -132,27 +148,6 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => CalendarsPage()),
-              );
-            },
-          ),
-          ListTile(
-            title: Row(
-              children: [
-                _ui.xDripMode
-                    ? Image(
-                  image: AssetImage('assets/icons/xDrip+.png'),
-                  height: 20,
-                )
-                    : Icon(Icons.notifications),
-                SizedBox(width: 10),
-                Text('xDrip+ values'),
-              ],
-            ),
-            trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => XDripPage()),
               );
             },
           ),

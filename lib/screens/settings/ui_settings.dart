@@ -1,4 +1,4 @@
-import 'package:fahrplan/utils/ui_perfs.dart';
+import 'package:relaa/utils/ui_perfs.dart';
 import 'package:flutter/material.dart';
 
 class UiSettingsPage extends StatefulWidget {
@@ -27,7 +27,7 @@ class UiSettingsPageState extends State<UiSettingsPage> {
       trainNerdmode = _uiPerfs.trainNerdMode;
     });
     setState(() {
-      xDripmode = _uiPerfs.xDripMode;
+      xDripmode = _uiPerfs.xDripImageMode;
     });
   }
 
@@ -43,20 +43,10 @@ class UiSettingsPageState extends State<UiSettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SwitchListTile(
-              title: Text('Train Nerd Mode'),
-              value: _uiPerfs.trainNerdMode,
+              title: Text('xDrip+ image mode'),
+              value: _uiPerfs.xDripImageMode,
               onChanged: (bool value) {
-                _uiPerfs.trainNerdMode = value;
-                setState(() {
-                  trainNerdmode = value;
-                });
-              },
-            ),
-            SwitchListTile(
-              title: Text('xDrip+ relay Mode'),
-              value: _uiPerfs.xDripMode,
-              onChanged: (bool value) {
-                _uiPerfs.xDripMode = value;
+                _uiPerfs.xDripImageMode = value;
                 setState(() {
                   xDripmode = value;
                 });

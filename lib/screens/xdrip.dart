@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fahrplan/services/xdrip_sgv_service.dart';
-import 'package:fahrplan/models/android/xdrip_sgv_model.dart';
-import 'package:fahrplan/utils/xdrip.dart';
-import 'package:intl/intl.dart';
+import 'package:relaa/services/xdrip_sgv_service.dart';
+import 'package:relaa/models/android/xdrip_sgv_model.dart';
+import 'package:relaa/utils/xdrip.dart';
 
 import 'package:chart_sparkline/chart_sparkline.dart';
 import '../services/bluetooth_manager.dart';
@@ -21,7 +20,7 @@ class _XDripPageState extends State<XDripPage> {
     final sgvService = SgvService(); // Initialize the service here
     bool renderText = false;
     try {
-      sgvData = await sgvService.fetchSgvData(renderText: renderText);
+      sgvData = await sgvService.fetchSgvData();
       if (sgvData.isNotEmpty) {
         widgetTitle = XDripUtils.getWidgetTitle(sgvData.first, fallback: widgetTitle, unitsHint: sgvData.first.unitsHint);
         setState(() {});
@@ -64,16 +63,20 @@ class _XDripPageState extends State<XDripPage> {
             child: Column(
                 children: [
                   ListTile(title: Text(widgetTitle)),
-                  Sparkline(
-                    data: XDripUtils.generateChartData(sgvData),
-                    gridLinesEnable: true,
-                    pointsMode: PointsMode.last,
-                    pointSize: 4.0,
-                    pointColor: Colors.blue,
-                  ),
+                  Container(
+                      height: 70,
+                      color: Colors.white,
+                      child: Sparkline(
+                                data: XDripUtils.generateChartData(sgvData),
+                                gridLinesEnable: true,
+                                pointsMode: PointsMode.last,
+                                pointSize: 4.0,
+                                pointColor: Colors.blue,
+                              ),
+                  )
                 ]
             ),
-          ),
+          )
       ]
       ),
     );

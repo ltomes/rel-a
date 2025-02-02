@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:fahrplan/models/fahrplan/calendar.dart';
-import 'package:fahrplan/models/fahrplan/checklist.dart';
-import 'package:fahrplan/models/fahrplan/daily.dart';
-import 'package:fahrplan/models/fahrplan/stop.dart';
-import 'package:fahrplan/services/bluetooth_manager.dart';
-import 'package:fahrplan/services/xdrip_sgv_service.dart';
-import 'package:fahrplan/services/stops_manager.dart';
-import 'package:fahrplan/utils/ui_perfs.dart';
+import 'package:relaa/models/fahrplan/calendar.dart';
+import 'package:relaa/models/fahrplan/checklist.dart';
+import 'package:relaa/models/fahrplan/daily.dart';
+import 'package:relaa/models/fahrplan/stop.dart';
+import 'package:relaa/services/bluetooth_manager.dart';
+import 'package:relaa/services/stops_manager.dart';
+import 'package:relaa/utils/ui_perfs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -82,9 +81,9 @@ Future<void> initializeService() async {
 
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     notificationChannelId, // id
-    'Fahrplan', // title
+    'Reläa', // title
     description:
-        'This channel is used for Fahrplan notifications.', // description
+        'This channel is used for Reläa notifications.', // description
     importance: Importance.low, // importance must be at low or higher level
   );
 
@@ -104,7 +103,7 @@ Future<void> initializeService() async {
 
       notificationChannelId:
           notificationChannelId, // this must match with notification channel you created above.
-      initialNotificationTitle: 'Fahrplan',
+      initialNotificationTitle: 'Reläa',
       initialNotificationContent: 'Initializing',
       foregroundServiceNotificationId: notificationId,
 
@@ -145,7 +144,7 @@ Future<void> onStart(ServiceInstance service) async {
       if (await service.isForegroundService()) {
         flutterLocalNotificationsPlugin.show(
           notificationId,
-          'Fahrplan',
+          'Reläa',
           'Awesome ${DateTime.now()}',
           const NotificationDetails(
             android: AndroidNotificationDetails(

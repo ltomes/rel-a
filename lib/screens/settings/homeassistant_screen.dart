@@ -1,4 +1,4 @@
-import 'package:fahrplan/models/fahrplan/widgets/homassistant.dart';
+import 'package:relaa/models/fahrplan/widgets/homassistant.dart';
 import 'package:flutter/material.dart';
 
 class HomeAssistantSettingsPage extends StatefulWidget {

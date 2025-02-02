@@ -1,4 +1,4 @@
-import 'package:fahrplan/models/fahrplan/calendar.dart';
+import 'package:relaa/models/fahrplan/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/services.dart';
