@@ -4,6 +4,12 @@ Reläa aspires to share xdrip+ data via Local Broadcast to the Even Realities G1
 
 This is WIP, the readme (in main) will be updated when a usable version is ready.
 
+| Theme | Dark    | Light |
+| -------- |---------|-------|
+| | ![Dark Theme](repo_assets/dm.jpg) | ![Light Theme](repo_assets/lm.jpg)  |
+
+
+
 ## Installation
 Download this code branch, and either compile it in Android Studio, or via `flutter build apk`.
 
