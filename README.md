@@ -20,13 +20,13 @@ If you need a feature, feel free to reach out and we can talk through if it is s
 or how you can contribute to help me accomplish it.
 Device testing, I have very limited device access to test on a range of hardware but I will try to look into any issues you find in testing.
 
-Tentative roadmap:
-Better support for image/graph of glucose values to the glasses (There are some artifacts in teh BSP output being sent to the display). I want to support only "alert on change" like we can for text.
-Better support for text based values being sent to the glasses (There is a newer API from Even that is more reliable). I want to support "always on" text like I can for images.
-Better support for not showing stale data.
-Support other data consumption from xDrip (local broadcast)
-Support other data consumption from Even Realities G1 headset (Gadgetbridge for battery health)
-Support alternative software for the G1 like AugmentOS.
+Tentative roadmap: 
+- Better support for image/graph of glucose values to the glasses (There are some artifacts in teh BSP output being sent to the display). I want to support only "alert on change" like we can for text.
+- Better support for text based values being sent to the glasses (There is a newer API from Even that is more reliable). I want to support "always on" text like I can for images.
+- Better support for not showing stale data.
+- Support other data consumption from xDrip (local broadcast)
+- Support other data consumption from Even Realities G1 headset (Gadgetbridge for battery health)
+- Support alternative software for the G1 like AugmentOS.
 
 ###
 Risks:
@@ -41,7 +41,7 @@ What devices have you tested this with?
 
 Forked from [Fahrplan](https://github.com/meyskens/fahrplan/tree/main)
 
-"Reläa" is a Sweedish word for electrical relay which is the extent of what I want to accomplish with this garden project. I want an application that can easilly forward glucose data from a users xdrip+ phone to the Even Realities headset so the user can know their glucose at a glance.
+"Reläa" is a Swedish word for electrical relay which is the extent of what I want to accomplish with this garden project. I want an application that can easilly forward glucose data from a users xdrip+ phone to the Even Realities headset so the user can know their glucose at a glance.
 
 While it is meant to offer an "OS" for the Even Realities G1 and will copy some of the original functionality like notifications it is not designed to be a full smartglasses OS.
 

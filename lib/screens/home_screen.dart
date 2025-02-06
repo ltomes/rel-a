@@ -10,13 +10,7 @@ import 'package:relaa/services/xdrip_sgv_service.dart';
 import 'package:relaa/models/android/xdrip_sgv_model.dart';
 import 'package:relaa/utils/xdrip.dart';
 
-extension DarkMode on BuildContext {
-  /// is dark mode currently enabled?
-  bool get isDarkMode {
-    final brightness = MediaQuery.of(this).platformBrightness;
-    return brightness == Brightness.dark;
-  }
-}
+import 'package:relaa/utils/themes.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -105,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                   title: Text(sgvData.isNotEmpty
                       ? widgetTitle
                       : 'Loading xDrip+ data...',
-                  style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 10, )),
+                  style: TextStyle(color: context.isDarkMode ? Colors.white70 : Colors.black54, fontSize: 10, )),
                 horizontalTitleGap: -15,
               ),
             ]),

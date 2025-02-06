@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:relaa/services/bluetooth_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:relaa/utils/themes.dart';
 
 class GlassStatus extends StatefulWidget {
   const GlassStatus({super.key});
@@ -58,6 +59,7 @@ class GlassStatusState extends State<GlassStatus> {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle textStyle = TextStyle(color: context.isDarkMode ? Colors.white70 : Colors.black54);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -71,21 +73,23 @@ class GlassStatusState extends State<GlassStatus> {
                 : ElevatedButton(
                     onPressed: isScanning ? null : _scanAndConnect,
                     child: isScanning
-                        ? const Row(
+                        ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(width: 10),
-                              SizedBox(
+                              const SizedBox(width: 10),
+                              const SizedBox(
                                 width: 20,
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                 ),
                               ),
-                              Text('Scanning for G1 glasses'),
+                              Text('Scanning for G1 glasses',
+                                  style: TextStyle(color: context.isDarkMode ? Colors.white70 : Colors.black54)),
                             ],
                           )
-                        : const Text('Connect to G1'),
+                        : Text('Connect to G1',
+                      style: TextStyle(color: context.isDarkMode ? Colors.white70 : Colors.black54),),
                   ),
           ],
         ),
