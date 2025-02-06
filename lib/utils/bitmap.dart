@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as img;
-
+import 'package:flutter_image_converter/flutter_image_converter.dart';
 
 Future<Uint8List> removeWhiteBackground(Uint8List bytes) async {
   img.Image image = img.decodeImage(bytes)!;
@@ -163,9 +163,11 @@ Future<void> _saveBitmapToDisk(Uint8List bmpData, String fileName) async {
   }
 }
 
-Uint8List generateBMPForDisplay(Uint8List bmpData, int canvasWidth, int canvasHeight) {
+Future<Uint8List> generateBMPForDisplay(Uint8List pngImage, int canvasWidth, int canvasHeight) async {
   // var rgbaData = await removeWhiteBackground(bmpData);
-  final bmp1BitData = _convertRgbaTo1Bit(bmpData, canvasWidth, canvasHeight);
+  final bmp32Image = await pngImage.bmpUint8List;
+  // Bitmap bitmap32Data = Bitmap.fromHeadless(canvasWidth, canvasHeight, bmp32Image); // Not async
+  final bmp1BitData = _convertRgbaTo1Bit(bmp32Image, canvasWidth, canvasHeight);
   final bmpBytes = _build1BitBmp(canvasWidth, canvasHeight, bmp1BitData);
   return bmpBytes;
 }
@@ -173,7 +175,9 @@ Uint8List generateBMPForDisplay(Uint8List bmpData, int canvasWidth, int canvasHe
 /// Convert RGBA to 1-bit (threshold at ~50% brightness)
 Uint8List _convertRgbaTo1Bit(Uint8List bmpData, int width, int height) {
   // Remove the first 40 bytes (BMP header) from bmpData and save it as rgba
-  Uint8List rgba = bmpData.sublist(128); // Was 139, 11 or 12 pixels get trimmed from the top rows with this value...
+  // Should be 320 bits (40 bytes), but when I remove 320 bits I get an error processing the remaining Uint8List.
+  Uint8List rgba = bmpData.sublist(139); // Was 139, 11 or 12 pixels get trimmed from the top rows with this value...
+  // Uint8List rgba = bmpData.sublist(139); // Was 139, 11 or 12 pixels get trimmed from the top rows with this value...
   final bytesPerRow = width ~/ 8;
   final output = Uint8List(bytesPerRow * height);
 
@@ -201,6 +205,7 @@ Uint8List _convertRgbaTo1Bit(Uint8List bmpData, int width, int height) {
 
 /// Build a 1-bit BMP file with a monochrome palette
 Uint8List _build1BitBmp(int width, int height, Uint8List bmpData) {
+  // final headerSize = 62;
   final headerSize = 62;
   final bytesPerRow = width ~/ 8;
   final imageSize = bytesPerRow * height;

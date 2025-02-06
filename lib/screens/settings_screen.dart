@@ -33,11 +33,19 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Settings'),
-      ),
       body: ListView(
         children: [
+          SwitchListTile(
+            title: Text('xDrip+ image mode'),
+            value: _uiPerfs.xDripImageMode,
+            onChanged: (bool value) {
+              _uiPerfs.xDripImageMode = value;
+              setState(() {
+                xDripmode = value;
+              });
+            },
+          ),
+
           ListTile(
             title: Row(
               children: [
@@ -86,16 +94,6 @@ class SettingsPageState extends State<SettingsPage> {
                 context,
                 MaterialPageRoute(builder: (context) => WhisperSettingsPage()),
               );
-            },
-          ),
-          SwitchListTile(
-            title: Text('xDrip+ image mode'),
-            value: _uiPerfs.xDripImageMode,
-            onChanged: (bool value) {
-              _uiPerfs.xDripImageMode = value;
-              setState(() {
-                xDripmode = value;
-              });
             },
           ),
           ListTile(

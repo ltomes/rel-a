@@ -80,7 +80,9 @@ class XDripUtils {
 
   static String getWidgetTitle(SgvResponse sgvResponse, {String fallback='An error occurred generating title', String? unitsHint}) {
     try {
-      return '${XDripUtils.getFormattedSGVValue(sgvResponse, unitsHint)}: ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(sgvResponse.date, isUtc: false))}';
+      final now = DateTime.now();
+      final difference = now.difference(DateTime.fromMillisecondsSinceEpoch(sgvResponse.date, isUtc: false)).inMinutes.toString();
+      return '${XDripUtils.getFormattedSGVValue(sgvResponse, unitsHint)}: ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(sgvResponse.date, isUtc: false))} (${difference}min old)';
     } catch (e) {
       // debugPrint('Error while generating widget title: $e');
       return fallback;

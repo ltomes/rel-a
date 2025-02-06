@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:relaa/models/android/xdrip_sgv_model.dart';
 import '../services/bluetooth_manager.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:flutter_image_converter/flutter_image_converter.dart';
 import 'package:relaa/utils/bitmap.dart';
 import 'package:flutter/material.dart';
 import 'package:relaa/utils/ui_perfs.dart';
@@ -89,7 +88,7 @@ Future<Uint8List> generateImageForDisplay(sgvData, String widgetTitle) async {
               height: canvasHeight,
               color: Colors.white,
               child: Padding(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.only(top: 30, left: 5, right: 5, bottom: 0),
                   child: Column(children: [
                     Container(
                         width: canvasWidth,
@@ -113,19 +112,22 @@ Future<Uint8List> generateImageForDisplay(sgvData, String widgetTitle) async {
                           pointColor: Colors.black,
                           backgroundColor: Colors.white,
                         )),
-                    Text(
-                      widgetTitle,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child:Text(
+                          widgetTitle,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              ),
+                        ),
                     ),
                   ])))))
       .then((capturedImage) async {
         print('renderText is false, rendering image info will be $widgetTitle');
-        final bmpImage = await capturedImage.bmpUint8List;
-        final bmpOneBitImage = generateBMPForDisplay(
-            bmpImage, canvasWidth. toInt(), canvasHeight.toInt());
+        final bmpOneBitImage = await generateBMPForDisplay(
+            capturedImage, canvasWidth. toInt(), canvasHeight.toInt());
         return bmpOneBitImage;
       });
 }

@@ -1,4 +1,3 @@
-import 'package:relaa/screens/calendars_screen.dart';
 import 'package:relaa/screens/settings_screen.dart';
 import 'package:relaa/screens/xdrip.dart';
 import 'package:relaa/utils/ui_perfs.dart';
@@ -11,6 +10,13 @@ import 'package:relaa/services/xdrip_sgv_service.dart';
 import 'package:relaa/models/android/xdrip_sgv_model.dart';
 import 'package:relaa/utils/xdrip.dart';
 
+extension DarkMode on BuildContext {
+  /// is dark mode currently enabled?
+  bool get isDarkMode {
+    final brightness = MediaQuery.of(this).platformBrightness;
+    return brightness == Brightness.dark;
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,15 +26,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final UiPerfs _ui = UiPerfs.singleton;
   late List<SgvResponse> sgvData = []; // Initialize it as an empty list
   late String widgetTitle = 'Loading xDrip+ data...';
+
   Future<void> fetchSgvData() async {
     final sgvService = SgvService(); // Initialize the service here
     try {
       sgvData = await sgvService.fetchSgvData();
       if (sgvData.isNotEmpty) {
-        widgetTitle = XDripUtils.getWidgetTitle(sgvData.first, fallback: widgetTitle, unitsHint: sgvData.first.unitsHint);
+        widgetTitle = XDripUtils.getWidgetTitle(sgvData.first,
+            fallback: widgetTitle, unitsHint: sgvData.first.unitsHint);
         setState(() {
           this.widgetTitle = widgetTitle;
           this.sgvData = sgvData;
@@ -38,8 +45,6 @@ class _HomePageState extends State<HomePage> {
           this.sgvData = sgvData;
         });
       }
-
-
     } catch (e) {
       print('Error making request: $e');
     }
@@ -74,50 +79,44 @@ class _HomePageState extends State<HomePage> {
           GlassStatus(),
           ElevatedButton(
             onPressed: fetchSgvData,
-            child: const Text('Force Fetch SGV Data'),
+            child: Text('Force Fetch SGV Data',
+                style: TextStyle(
+                    color: context.isDarkMode ? Colors.white : Colors.grey)),
           ),
-          // Expanded(
-          //   child: sgvData.isNotEmpty
-          //       ? ListView.builder(
-          //     itemCount: sgvData.length,
-          //     itemBuilder: (BuildContext context, int index) {
-          //       return ListTile(title: Text(XDripUtils.getWidgetTitle(sgvData[index], fallback: widgetTitle, unitsHint: sgvData.first.unitsHint)));
-          //     },
-          //   )
-          //       : SizedBox(
-          //     height: 40,
-          //     width: 40,
-          //     child: CircularProgressIndicator(),
-          //   )
-          // ),
           Padding(
             padding: EdgeInsets.all(10.0),
-            child: Column(
-                children: [
-                  ListTile(title: Text(sgvData.isNotEmpty ? widgetTitle : 'Loading xDrip+ data...')),
-                  Container(
-                    height: 70,
-                    color: Colors.white,
-                    child: sgvData.isNotEmpty ? Sparkline(
-                      data: XDripUtils.generateChartData(sgvData),
-                      gridLinesEnable: true,
-                      pointsMode: PointsMode.last,
-                      pointSize: 4.0,
-                      pointColor: Colors.blue,
-                    ) : Text('...'),
-                  )
-                ]
-            ),
+            child: Column(children: [
+              Container(
+                height: 70,
+                color: Colors.white,
+                child: sgvData.isNotEmpty
+                    ? Sparkline(
+                        data: XDripUtils.generateChartData(sgvData),
+                        gridLinesEnable: true,
+                        pointsMode: PointsMode.last,
+                        pointSize: 4.0,
+                        pointColor: Colors.blue,
+                        backgroundColor:
+                            context.isDarkMode ? Colors.black87 : Colors.white,
+                      )
+                    : Text('...'),
+              ),
+              ListTile(
+                  title: Text(sgvData.isNotEmpty
+                      ? widgetTitle
+                      : 'Loading xDrip+ data...',
+                  style: TextStyle(color: Color(0xFFFFFFFF), fontSize: 10, )),
+                horizontalTitleGap: -15,
+              ),
+            ]),
           ),
           ListTile(
             title: Row(
               children: [
-                _ui.xDripImageMode
-                    ? Image(
+                Image(
                   image: AssetImage('assets/icons/xDrip+.png'),
                   height: 20,
-                )
-                    : Icon(Icons.notifications),
+                ),
                 SizedBox(width: 10),
                 Text('xDrip+ values'),
               ],
@@ -130,27 +129,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-          ListTile(
-            title: Row(
-              children: [
-                _ui.trainNerdMode
-                    ? Image(
-                        image: AssetImage('assets/icons/groen.png'),
-                        height: 20,
-                      )
-                    : Icon(Icons.calendar_today),
-                SizedBox(width: 10),
-                Text('Calendar Integration'),
-              ],
-            ),
-            trailing: Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CalendarsPage()),
-              );
-            },
-          ),
+          Container(height: 400, child: SettingsPage()),
         ],
       ),
     );
