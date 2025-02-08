@@ -8,7 +8,11 @@ This is WIP, the readme (in main) will be updated when a usable version is ready
 | -------- |---------|-------|
 | | ![Dark Theme](repo_assets/dm.jpg) | ![Light Theme](repo_assets/lm.jpg)  |
 
+## What does it look like?
 
+| Mode | Text                                                                                     | Image                                                                                                                                                |
+|------|------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
+|      | ![A through the lens photo of the app running in text mode.](repo_assets/text_mode.jpg) A through the lens photo of the app running in text mode. | ![A through the lens photo of the app running in image mode.](repo_assets/image_mode.jpg) A through the lens photo of the app running in image mode. |
 
 ## Installation
 Download this code branch, and either compile it in Android Studio, or via `flutter build apk`.
