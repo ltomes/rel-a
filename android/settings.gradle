@@ -24,5 +24,7 @@ plugins {
 }
 
 include ":app"
+
+// For future spike/AugmentOS integration
 //include ':AugmentOSLib'
-//projFect(':AugmentOSLib').projectDir = new File(rootProject.projectDir, '../augmentosenv/AugmentOS/augmentos_android_library/AugmentOSLib')
+//project(':AugmentOSLib').projectDir = new File(rootProject.projectDir, '../../augmentosenv/AugmentOS/augmentos_android_library/AugmentOSLib')

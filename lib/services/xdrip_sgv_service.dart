@@ -14,6 +14,7 @@ import 'package:chart_sparkline/chart_sparkline.dart';
 //Just for debug
 // import 'package:share_plus/share_plus.dart';
 // import 'package:path_provider/path_provider.dart';
+import 'dart:developer' as developer;
 
 class SgvService {
   final String slopeDoubleDown = "DoubleDown";
@@ -27,17 +28,15 @@ class SgvService {
   final String slopeNotComputable = "NotComputable";
   Future<List<SgvResponse>> fetchSgvData() async {
     BluetoothManager bm = BluetoothManager();
-    final UiPerfs _ui = UiPerfs.singleton;
-    final bool renderText = !_ui.xDripImageMode;
-    print("fetchSgvData called. renderMode: ${renderText ? 'Text' : 'Image'}");
+    final UiPerfs ui = UiPerfs.singleton;
+    final bool renderText = !ui.xDripImageMode;
+    developer.log('xDrip service called.', name: 'relaa.xdrip');
     // Documentation: https://github.com/NightscoutFoundation/xDrip/blob/master/Documentation/technical/Local_Web_Services.md#sgvjson-endpoint
     const String uri = "http://127.0.0.1:17580/sgv.json";
     final response = await http.get(Uri.parse(uri));
-    print('response.body: $response.body');
     if (response.statusCode == 200) {
       List jsonResponse = jsonDecode(response.body) as List;
-      print('Number of entries: ${jsonResponse.length}');
-      print(jsonResponse);
+      developer.log('Successful request.', name: 'relaa.xdrip');
       List<SgvResponse> sgvData =
           jsonResponse.map((e) => SgvResponse.fromJson(e)).toList();
       String widgetTitle = 'Loading xDrip+ data...';
@@ -45,14 +44,10 @@ class SgvService {
           fallback: widgetTitle, unitsHint: sgvData.first.unitsHint);
       if (bm.isConnected) {
         if (renderText) {
-          print('renderText is true, printing $widgetTitle');
+          developer.log(widgetTitle, name: 'relaa.bm.sendText');
           bm.sendText(widgetTitle);
         } else {
             final bmpOneBitImage = await generateImageForDisplay(sgvData, widgetTitle);
-            //Just for debug
-            //End Just for debug
-            await bm.sendBitmap(bmpOneBitImage);
-
             // // Generate debug image for share plugin
             // final directory = await getApplicationDocumentsDirectory();
             // final imagePath = await File('${directory.path}/image.png').create();
@@ -62,6 +57,9 @@ class SgvService {
             // final files = <XFile>[];
             // files.add(XFile(imagePath.path, name: 'image.png'));
             // await Share.shareXFiles(files);
+
+            developer.log('sendBitmap called', name: 'relaa.bm.sendBitmap');
+            await bm.sendBitmap(bmpOneBitImage);
         }
       }
       return sgvData;
@@ -125,7 +123,7 @@ Future<Uint8List> generateImageForDisplay(sgvData, String widgetTitle) async {
                     ),
                   ])))))
       .then((capturedImage) async {
-        print('renderText is false, rendering image info will be $widgetTitle');
+        developer.log('renderText is false, rendering image info will be $widgetTitle', name: 'dev.ltomes.relaa');
         final bmpOneBitImage = await generateBMPForDisplay(
             capturedImage, canvasWidth. toInt(), canvasHeight.toInt());
         return bmpOneBitImage;
