@@ -64,3 +64,14 @@ Thanks to @emingenc and @NyasakiAT for their work in building the G1 BLE librari
 ## Copy me!
 
 As mentioned above this is already a forked project. If any of this is useful to you copy it.
+
+## **Disclaimer And Warning**
+
+- **Use Reläa at your own risk, and do not use the information or code to make medical decisions.**
+- Use of [code from github.com](https://github.com/ltomes/rel-a) is without warranty or formal support of any kind.
+- All product and company names, trademarks, service marks, registered trademarks, and registered service marks are the property of their respective holders.
+
+**Please note:** this project has no association with and is not endorsed by: xDrip+, Abbott Laboratories, Aidex, Ascenia, i-Sens, Companion Medical, Dexcom, Medtronic, Lifescan, Medtrum, Pendiq, Roche, Senseonics, Sibionics, GlucoRx.
+
+## Good we have that out of the way.
+This is a garden project, but I will try to dedicate time to making this app work for you if it's helping you manage your diabetes better; or think it can do that for you.
