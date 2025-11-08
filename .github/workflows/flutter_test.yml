@@ -14,15 +14,25 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    container:
-      image: registry.gitlab.com/theonewiththebraid/flutter-dockerimages:3.27.0-android-x86_64
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
       - name: Set up Flutter
-        run: flutter doctor
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Verify Flutter setup
+        run: flutter doctor -v
 
       - name: Install dependencies
         run: flutter pub get
