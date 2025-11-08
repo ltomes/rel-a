@@ -44,14 +44,14 @@ jobs:
         run: yes | flutter doctor --android-licenses || true
 
       - name: Setup keystore (for release builds)
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         continue-on-error: true
         run: echo "$KEY_BASE64" | base64 -d > android/app/keystore.jks
         env:
           KEY_BASE64: ${{ secrets.KEY_BASE64 }}
 
       - name: Setup key.properties (for release builds)
-        if: github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         continue-on-error: true
         run: echo "$KEY_PROPERTIES" > android/key.properties
         env:
@@ -73,12 +73,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Release APK (with signing)
-        if: github.event_name != 'pull_request'
+      - name: Build Release APK (main branch only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: flutter build apk --release
 
-      - name: Build Debug APK (without signing)
-        if: github.event_name == 'pull_request'
+      - name: Build Debug APK (PRs and feature branches)
+        if: github.ref != 'refs/heads/main' || github.event_name != 'push'
         run: flutter build apk --debug
 
       - name: Prepare artifact name
