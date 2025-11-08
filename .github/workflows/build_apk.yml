@@ -40,6 +40,9 @@ jobs:
           add-to-path: true
           local-cache: true
 
+      - name: Accept Android SDK licenses
+        run: yes | flutter doctor --android-licenses || true
+
       - name: Setup keystore (for release builds)
         if: github.event_name != 'pull_request'
         continue-on-error: true
