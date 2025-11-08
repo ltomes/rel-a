@@ -72,3 +72,10 @@ app.*.map.json
 assets/badapple/
 
 .cxx/
+
+# Rust build artifacts
+rust/target/
+rust/Cargo.lock
+*.so
+*.dylib
+*.dll
