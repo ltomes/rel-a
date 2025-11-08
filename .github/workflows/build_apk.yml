@@ -3,73 +3,143 @@ name: Build and Upload APK
 on:
   push:
     branches:
-      - main
+      - feature/xDrip
+      - 'claude/**'
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - feature/xDrip
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    container:
-      image: registry.gitlab.com/theonewiththebraid/flutter-dockerimages:3.27.0-android-x86_64
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: setup keystore
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Set up Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r27
+          add-to-path: true
+          local-cache: true
+
+      - name: Accept Android SDK licenses
+        run: yes | flutter doctor --android-licenses || true
+
+      - name: Setup keystore (for release builds)
+        if: github.ref == 'refs/heads/feature/xDrip' && github.event_name == 'push'
+        continue-on-error: true
         run: echo "$KEY_BASE64" | base64 -d > android/app/keystore.jks
         env:
           KEY_BASE64: ${{ secrets.KEY_BASE64 }}
-      
-      - name: setup key.properties
+
+      - name: Setup key.properties (for release builds)
+        if: github.ref == 'refs/heads/feature/xDrip' && github.event_name == 'push'
+        continue-on-error: true
         run: echo "$KEY_PROPERTIES" > android/key.properties
         env:
           KEY_PROPERTIES: ${{ secrets.KEY_PROPERTIES }}
 
-
-      - name: Set up Flutter
-        run: flutter doctor
+      - name: Verify Flutter setup
+        run: flutter doctor -v
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK
+      - name: Build Release APK (feature/xDrip branch only)
+        if: github.ref == 'refs/heads/feature/xDrip' && github.event_name == 'push'
         run: flutter build apk --release
 
-      - name: Upload APK
+      - name: Build Debug APK (PRs and feature branches)
+        if: github.ref != 'refs/heads/feature/xDrip' || github.event_name != 'push'
+        run: flutter build apk --debug
+
+      - name: Prepare artifact name
+        id: artifact_name
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "name=app-debug-pr${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+            echo "file=app-debug.apk" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref_type }}" == "tag" ]; then
+            echo "name=app-release-${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "file=app-release.apk" >> $GITHUB_OUTPUT
+          elif [ -f "build/app/outputs/flutter-apk/app-release.apk" ]; then
+            echo "name=app-release-${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+            echo "file=app-release.apk" >> $GITHUB_OUTPUT
+          else
+            echo "name=app-debug-${GITHUB_REF##*/}" >> $GITHUB_OUTPUT
+            echo "file=app-debug.apk" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: ${{ steps.artifact_name.outputs.name }}
+          path: build/app/outputs/flutter-apk/${{ steps.artifact_name.outputs.file }}
+          retention-days: 30
+
+      - name: Comment PR with APK link
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const message = `### 📱 APK Build Complete!
+
+            Your debug APK has been built successfully and is available as a build artifact.
+
+            **Download:** Click on the "Summary" page of this workflow run and download the artifact named \`${{ steps.artifact_name.outputs.name }}\`.
+
+            **Direct link:** [Workflow Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            > Note: This is a debug build. Release builds with signing are only created on the feature/xDrip branch.`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
 
   release:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+
     steps:
       - name: Download APK
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
-          name: app-release.apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: app-release-${{ github.ref_name }}
+          path: ./artifacts
 
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          files: ./artifacts/app-release.apk
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/app/outputs/flutter-apk/app-release.apk
-          asset_name: app-release.apk
-          asset_content_type: application/vnd.android.package-archive
