@@ -23,14 +23,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup keystore (if secrets available)
-        if: ${{ secrets.KEY_BASE64 }}
+      - name: Setup keystore (for release builds)
+        if: github.event_name != 'pull_request'
+        continue-on-error: true
         run: echo "$KEY_BASE64" | base64 -d > android/app/keystore.jks
         env:
           KEY_BASE64: ${{ secrets.KEY_BASE64 }}
 
-      - name: Setup key.properties (if secrets available)
-        if: ${{ secrets.KEY_PROPERTIES }}
+      - name: Setup key.properties (for release builds)
+        if: github.event_name != 'pull_request'
+        continue-on-error: true
         run: echo "$KEY_PROPERTIES" > android/key.properties
         env:
           KEY_PROPERTIES: ${{ secrets.KEY_PROPERTIES }}
@@ -52,11 +54,11 @@ jobs:
         run: flutter pub get
 
       - name: Build Release APK (with signing)
-        if: ${{ secrets.KEY_BASE64 && github.event_name != 'pull_request' }}
+        if: github.event_name != 'pull_request'
         run: flutter build apk --release
 
       - name: Build Debug APK (without signing)
-        if: ${{ !secrets.KEY_BASE64 || github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request'
         run: flutter build apk --debug
 
       - name: Prepare artifact name
